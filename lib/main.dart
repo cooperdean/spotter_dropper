@@ -11,7 +11,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Spotter',
         theme: ThemeData(
-          primaryColor: Colors.deepOrange,
+          primaryColor: Colors.grey[900],
+          accentColor: Colors.white,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: HomeScreen());
