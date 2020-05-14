@@ -67,6 +67,7 @@ target 'Runner' do
   # Plugin Pods
   pod 'Firebase'
   pod 'GoogleMaps'
+  pod 'GoogleSignIn'
 
   # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock
   # referring to absolute paths on developers' machines.

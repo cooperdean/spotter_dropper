@@ -10,7 +10,7 @@ class MapsView extends StatefulWidget {
 
 class _MapsViewState extends State<MapsView> {
   GoogleMapController _mapController;
-  static const LatLng _center = const LatLng(53.434213, -103.575217);
+  static const LatLng _center = const LatLng(53.434213, -103.574917);
   final Map<String, Marker> _markers = {};
 
   _onMapCreated(GoogleMapController controller) {
@@ -60,6 +60,8 @@ class _MapsViewState extends State<MapsView> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
@@ -79,16 +81,10 @@ class _MapsViewState extends State<MapsView> {
                   child: Icon(Icons.center_focus_weak),
                   heroTag: null,
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 15),
                 FloatingActionButton(
                   onPressed: _placeMarker,
                   child: Icon(Icons.flag),
-                  heroTag: null,
-                ),
-                SizedBox(height: 5),
-                FloatingActionButton(
-                  onPressed: _placeMarker,
-                  child: Icon(Icons.add),
                   heroTag: null,
                 ),
               ],
@@ -98,30 +94,67 @@ class _MapsViewState extends State<MapsView> {
       ),
       body: Stack(children: [
         GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(target: _center, zoom: 17.0),
-          myLocationButtonEnabled: false,
-          mapType: MapType.hybrid,
-          markers: _markers.values.toSet(),
-          onCameraMove: _onCameraMove,
-        ),
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(target: _center, zoom: 17.0),
+            myLocationButtonEnabled: false,
+            mapType: MapType.hybrid,
+            markers: _markers.values.toSet(),
+            onCameraMove: _onCameraMove,
+            padding: EdgeInsets.only(left: 15.0)),
         FutureBuilder(
             future: _printCurrentLocation(),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
-                return Padding(
-                    padding: const EdgeInsets.fromLTRB(23.0, 64.0, 0.0, 0.0),
-                    child: Container(
-                        width: MediaQuery.of(context).size.width * .75,
-                        child: Text(snapshot.data,
-                            style: TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white))));
+                return Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(height: screenHeight * 0.06),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                                size: screenWidth * 0.07,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          Container(
+                              child: Text(snapshot.data,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.055,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white))),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.menu,
+                                color: Colors.white,
+                                size: screenWidth * 0.00,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
               } else {
-                return Text("...");
+                return Text("");
               }
-            })
+            }),
       ]),
     );
   }
